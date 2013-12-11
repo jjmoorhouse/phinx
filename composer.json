@@ -25,5 +25,8 @@
             "Phinx": "src/"
         }
     },
-    "bin": ["bin/phinx"]
+    "bin": ["bin/phinx"],
+    "replace": {
+        "robmorgan/phinx" : "*"
+    }
 }
