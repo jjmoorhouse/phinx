@@ -22,4 +22,4 @@ abstract class TestMigration extends AbstractMigration
         $rows = implode('"),("',$rows);
         $this->execute('INSERT INTO `'.$table.'` VALUES ("'.$rows.'")');
     }
-} 
+}
