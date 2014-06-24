@@ -378,7 +378,7 @@ class Manager
     {
         if (null === $this->migrations) {
             $migrations = array();
-            
+
             $config = $this->getConfig();
             $phpFiles = $this->recursiveFindMigrations($config->getMigrationPath(), '*.php');//$config->getMigrationPath(), '#^(?:[A-Z]:)?(?:/(?!\.Trash)[^/]+)+/[^/]+\.(?:php)$#Di');
 
