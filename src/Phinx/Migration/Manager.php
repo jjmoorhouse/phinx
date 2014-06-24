@@ -34,6 +34,9 @@ use Symfony\Component\Console\Output\NullOutput;
 use Phinx\Db\Adapter\AdapterInterface;
 use Phinx\Config\Config;
 use Phinx\Migration\Manager\Environment;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RegexIterator;
 
 class Manager
 {
@@ -338,7 +341,17 @@ class Manager
         $this->migrations = $migrations;
         return $this;
     }
-    
+
+    protected function recursiveFindMigrations($folder, $pattern) {
+        $dir = new RecursiveDirectoryIterator($folder);
+        $iterator = new RecursiveIteratorIterator($dir);
+        $files = new RegexIterator($iterator, $pattern, RegexIterator::GET_MATCH);
+        $fileList = array();
+        foreach($files as $file) {
+            $fileList = array_merge($fileList, $file);
+        }
+        return $fileList;
+    }
     /**
      * Gets an array of the database migrations.
      *
@@ -350,8 +363,8 @@ class Manager
             $migrations = array();
             
             $config = $this->getConfig();
-            $phpFiles = glob($config->getMigrationPath() . DIRECTORY_SEPARATOR . '*.php');
-            
+            $phpFiles = $this->recursiveFindMigrations($config->getMigrationPath(), '#^(?:[A-Z]:)?(?:/(?!\.Trash)[^/]+)+/[^/]+\.(?:php)$#Di');
+
             // filter the files to only get the ones that match our naming scheme
             $fileNames = array();
             $versions = array();
