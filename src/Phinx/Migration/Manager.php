@@ -344,30 +344,14 @@ class Manager
     }
 
     protected function recursiveFindMigrations($folder, $pattern) {
-        $Directory = new RecursiveDirectoryIterator($folder);
-        $Iterator = new RecursiveIteratorIterator($Directory);
-        $Regex = new RegexIterator($Iterator, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
-        var_dump($Regex);
-        die();
-//        $files = glob($folder . DIRECTORY_SEPARATOR . '*.php');
-//        $dirs = new RecursiveDirectoryIterator($folder);
-//        echo "entering function" . PHP_EOL;
-//        foreach($dirs as $dir) {
-//            var_dump($dir);
-////            die();
-////            echo rtrim($dir->getPathName(),"." . PHP_EOL);
-////            $files = array_merge($files, $this->recursiveFindMigrations(rtrim($dir->getPathName(),"."), $pattern));
-//        }
-//        return $files;
-//        $iterator = new RecursiveIteratorIterator($dir);
-//        echo "ITERATOR <" . var_dump($iterator) . ">";
-//        die('HIT' . PHP_EOL);
-//        $files = new RegexIterator($iterator, $pattern, RegexIterator::GET_MATCH);
-//        $fileList = array();
-//        foreach($files as $file) {
-//            $fileList = array_merge($fileList, $file);
-//        }
-//        return $fileList;
+        $files = glob($folder . DIRECTORY_SEPARATOR . '*.php');
+        $itemsInDirectory = new RecursiveDirectoryIterator($folder);
+        foreach($itemsInDirectory as $item) {
+            if($item->isDir() && !(in_array($item->getFilename(), array('.', '..')))) {
+                $files = array_merge($files, $this->recursiveFindMigrations($item->getPathname(), $pattern));
+            }
+        }
+        return $files;
     }
     /**
      * Gets an array of the database migrations.
@@ -382,8 +366,6 @@ class Manager
             $config = $this->getConfig();
             $phpFiles = $this->recursiveFindMigrations($config->getMigrationPath(), '*.php');//$config->getMigrationPath(), '#^(?:[A-Z]:)?(?:/(?!\.Trash)[^/]+)+/[^/]+\.(?:php)$#Di');
 
-            var_dump($phpFiles);
-            die();
             // filter the files to only get the ones that match our naming scheme
             $fileNames = array();
             $versions = array();
