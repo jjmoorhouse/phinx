@@ -342,15 +342,27 @@ class Manager
         return $this;
     }
 
+//    protected function recursiveFindMigrations($pattern, $flags = 0)
+//    {
+//        $files = glob($pattern, $flags);
+//        foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
+//            $files = array_merge($files, recursiveFindMigrations($dir.'/'.basename($pattern), $flags));
+//        }
+//        return $files;
+//    }
     protected function recursiveFindMigrations($folder, $pattern) {
         $dir = new RecursiveDirectoryIterator($folder);
         $iterator = new RecursiveIteratorIterator($dir);
-        $files = new RegexIterator($iterator, $pattern, RegexIterator::GET_MATCH);
-        $fileList = array();
-        foreach($files as $file) {
-            $fileList = array_merge($fileList, $file);
+        foreach($iterator as $file) {
+            var_dump($file);
         }
-        return $fileList;
+        die();
+//        $files = new RegexIterator($iterator, $pattern, RegexIterator::GET_MATCH);
+//        $fileList = array();
+//        foreach($files as $file) {
+//            $fileList = array_merge($fileList, $file);
+//        }
+//        return $fileList;
     }
     /**
      * Gets an array of the database migrations.
@@ -363,7 +375,9 @@ class Manager
             $migrations = array();
             
             $config = $this->getConfig();
-            $phpFiles = $this->recursiveFindMigrations($config->getMigrationPath(), '#^(?:[A-Z]:)?(?:/(?!\.Trash)[^/]+)+/[^/]+\.(?:php)$#Di');
+            $phpFiles = glob($config->getMigrationPath() . DIRECTORY_SEPARATOR . '*.php');
+//            $phpFiles = $this->recursiveFindMigrations($config->getMigrationPath(), '#^(?:[A-Z]:)?(?:/(?!\.Trash)[^/]+)+/[^/]+\.(?:php)$#Di');
+            var_dump($phpFiles);
 
             // filter the files to only get the ones that match our naming scheme
             $fileNames = array();
