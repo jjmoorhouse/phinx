@@ -35,9 +35,6 @@ use Phinx\Db\Adapter\AdapterInterface;
 use Phinx\Config\Config;
 use Phinx\Migration\Manager\Environment;
 use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use RegexIterator;
-use RecursiveRegexIterator;
 
 class Manager
 {
@@ -364,7 +361,7 @@ class Manager
             $migrations = array();
 
             $config = $this->getConfig();
-            $phpFiles = $this->recursiveFindMigrations($config->getMigrationPath(), '*.php');//$config->getMigrationPath(), '#^(?:[A-Z]:)?(?:/(?!\.Trash)[^/]+)+/[^/]+\.(?:php)$#Di');
+            $phpFiles = $this->recursiveFindMigrations($config->getMigrationPath(), '*.php');
 
             // filter the files to only get the ones that match our naming scheme
             $fileNames = array();
