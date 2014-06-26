@@ -341,7 +341,7 @@ class Manager
     }
 
     protected function recursiveFindMigrations($folder, $pattern) {
-        $files = glob($folder . DIRECTORY_SEPARATOR . '*.php');
+        $files = glob($folder . DIRECTORY_SEPARATOR . $pattern);
         $itemsInDirectory = new RecursiveDirectoryIterator($folder);
         foreach($itemsInDirectory as $item) {
             if($item->isDir() && !(in_array($item->getFilename(), array('.', '..')))) {
