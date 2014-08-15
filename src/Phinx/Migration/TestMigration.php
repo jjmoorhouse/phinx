@@ -17,7 +17,9 @@ abstract class TestMigration extends AbstractMigration
     {
         $rows = array();
         foreach ($data as $row) {
-            $rows[] = implode('","',$row);
+            $rowStr = implode('","',$row);
+            $rowStr = str_replace('"NULL"', 'NULL', $rowStr);
+            $rows[] = $rowStr;
         }
         $rows = implode('"),("',$rows);
         $this->execute('INSERT INTO `'.$table.'` VALUES ("'.$rows.'")');
